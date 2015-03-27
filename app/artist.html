@@ -1,0 +1,26 @@
+<!-- youtube player -->
+<!-- <div class="row"> -->
+	<!-- <div class="col-md-12 col-lg-12" id="playerLocation"> -->
+		<div id="player"></div>	
+	<!-- </div> -->
+<!-- </div> -->
+
+<!-- artist info and related artists? -->
+<div class="container">
+	<div class="row">
+		<div class="col-md-4 col-lg-4">
+			<span>{{update();}}</span>
+			<h1>{{artist.name}}</h1>
+			<h2>{{artist.topGenre}}</h2>
+			<hr>
+			<p>{{bio.text}}</p>
+			<a href="{{bio.link}}">Source</a>
+		</div>
+		<div class="col-md-4 col-lg-4">
+			<h1>Top tracks</h1>
+		</div>
+		<div class="col-md-4 col-lg-4">
+			<h1>Related Artists</h1>
+		</div>
+	</div>
+</div>

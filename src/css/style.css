@@ -1,0 +1,26 @@
+html, body {
+	margin:0;
+	padding:0;
+	height:100%;
+}
+
+node-graph{
+	height: 100%;
+	width: 100%;
+	position: absolute;
+}
+
+.node {
+	stroke-width: 6px;
+}
+
+div.tooltip {
+	position: absolute;
+	text-align: center;
+	width: auto;
+	height: auto;
+	padding: 4px;
+	font: 2vh sans-serif;
+	background: black;
+	color: white;
+}
