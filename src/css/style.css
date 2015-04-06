@@ -16,11 +16,38 @@ node-graph{
 
 div.tooltip {
 	position: absolute;
-	text-align: center;
+	text-align: top;
 	width: auto;
 	height: auto;
 	padding: 4px;
 	font: 2vh sans-serif;
 	background: black;
 	color: white;
+}
+
+.tracks{
+	display: inline-block;
+	vertical-align: top;
+	width: 11vw;
+  	word-wrap: break-word;
+  	margin-right: 15px;
+  	margin-bottom: 8px;
+  	border-top: black solid 2px;
+  	padding-top: 5px;
+}
+
+.tracks p{
+	display: inline-block;
+}
+
+.youtubeSearch{
+	height: 5vw;
+  	width: 5vw;
+  	border-radius: 50%;
+  	background-color: grey;
+  	border: 0px;
+  	background-image: url(../../img/youtube.png);
+  	background-size: 100%;
+  	background-repeat: no-repeat;
+  	float: right;
 }

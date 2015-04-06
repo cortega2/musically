@@ -1,9 +1,5 @@
 <!-- youtube player -->
-<!-- <div class="row"> -->
-	<!-- <div class="col-md-12 col-lg-12" id="playerLocation"> -->
-		<div id="player"></div>	
-	<!-- </div> -->
-<!-- </div> -->
+<div id="player"></div>	
 
 <!-- artist info and related artists? -->
 <div class="container">
@@ -16,11 +12,20 @@
 			<p>{{bio.text}}</p>
 			<a href="{{bio.link}}">Source</a>
 		</div>
-		<div class="col-md-4 col-lg-4">
+		<div class="col-md-8 col-lg-8">
+			<div ng-show="gotTopTracks">
 			<h1>Top tracks</h1>
+			<div ng-repeat="track in topTracks" class="tracks">
+					<sound-button data-ng-click="play($event)" origem="{{track.previewURL}}" image="{{track.image}}">
+					</sound-button>
+					<button class="youtubeSearch" ng-click="searchYoutube(artist.name + ' ' + track.name)"></button>
+					<p>{{track.name | uppercase}}</p>
+					<p>From: {{track.album}}</p>
+			</div>
+			</div>
 		</div>
-		<div class="col-md-4 col-lg-4">
+		<!-- <div class="col-md-4 col-lg-4">
 			<h1>Related Artists</h1>
-		</div>
+		</div> -->
 	</div>
 </div>

@@ -28,6 +28,8 @@
         $scope.artist = pickedArtist;
         $scope.bio = "";
         $scope.calledBio = false;
+        $scope.topTracks;
+        $scope.gotTopTracks = false;
 
 
         $scope.update = function(){
@@ -36,17 +38,16 @@
 
             if ($scope.artist && !$scope.calledBio){
                 console.log("updating artist stuff");
-                //set player size when artist picked
-                // var pDOM = document.getElementById('playerLocation');
-                var body = document.body;
-                // player.setSize(200, body.offsetHeight);
-                // console.log(pDOM.offsetWidth);
-                player.setSize(body.offsetWidth, body.offsetHeight);
 
+                $scope.calledBio = true;
+
+                //set player size when artist picked
+                var body = document.body;
+                player.setSize(body.offsetWidth, body.offsetHeight);
 
                 $scope.artistInfo = new ArtistInfo(this.artist);
                 $scope.artistInfo.getBio($scope.setBio);
-                $scope.calledBio = true;
+                $scope.artistInfo.getTopTracks($scope.setTopTracks);
             }
         }
 
@@ -54,6 +55,17 @@
             $scope.bio = bio;
             console.log(bio);
             $scope.$apply();
+        }
+
+        $scope.setTopTracks = function (tracks){
+            $scope.topTracks = tracks;
+            $scope.gotTopTracks = true;
+            $scope.$apply();
+        }
+
+        $scope.searchYoutube = function (query){
+            $scope.artistInfo.search(query);
+            // console.log(query);
         }
     });
 
@@ -68,6 +80,49 @@
             // controllerAs : 'artist'
         } 
     });
+
+    // code via http://stackoverflow.com/questions/27104571/creating-a-new-directive-with-angularjs-using-html5-audio-element
+    app.directive('soundButton', [function () {
+        return {
+            restrict: 'E',
+            link: function (scope, element, attrs) {
+                var audioSrc = attrs.origem,
+                    audio = angular.element('<audio/>');
+
+                var source = angular.element('<source />');
+                source.attr("src", audioSrc).attr("type", "audio/mp3");
+
+                audio.attr('preload', true);
+                // audio.src = audioSrc;
+                audio.append(source);
+                element.append(audio);
+
+                scope.play = function (event) {
+                    
+                    var audioElement = event.srcElement.children.item();
+                    if (audioElement.paused) {
+                        audioElement.play();
+                    } else {
+                        audioElement.pause();
+                    }
+                };
+
+                element.css({
+                    backgroundImage : 'url(' + attrs.image + ')',
+                    backgroundSize : '100%',
+                    borderRadius : '50%',
+                    width : '5vw',
+                    height : '5vw',
+                    border : '0px',
+                    backgroundColor : 'red',
+                    display : 'inline-block',
+                    cursor : 'pointer',
+                    float: 'left'
+                });
+
+            }
+        }
+    }]);
 
     function setPickedArtist(artist){
         pickedArtist = artist;

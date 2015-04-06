@@ -3,7 +3,7 @@ function nodeGraph(element, controller, setArtist) {
         artists = [];
         var minWidth = 50;
         var maxWidth = 100;
-
+        //changed gettopartists to get hypedartists since it was down, change back later when working again
         d3.json("http://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key=563056c3a22cddf982583f3730187b42&limit=200&format=json"
             , function(lastfm){
             d3.json("http://developer.echonest.com/api/v4/artist/top_hottt?api_key=EZYC2KYTIGEQDMKFM&format=json&results=200&start=0&bucket=hotttnesss", function(nest){
@@ -14,6 +14,9 @@ function nodeGraph(element, controller, setArtist) {
                 var min = lastfm.artists.artist[0].listeners *  nest.response.artists[0].hotttnesss;
                 var max = lastfm.artists.artist[0].listeners *  nest.response.artists[0].hotttnesss;
 
+                // var min = nest.response.artists[0].hotttnesss;
+                // var max = nest.response.artists[0].hotttnesss;
+
                 for(var l in lastfm.artists.artist){
                     // console.log(lastfm.artists.artist[i].name);
                     for(var n in nest.response.artists){
@@ -22,6 +25,7 @@ function nodeGraph(element, controller, setArtist) {
 
                             var artist = {
                                 name: nest.response.artists[n].name,
+                                // rank: nest.response.artists[n].hotttnesss,
                                 rank: lastfm.artists.artist[l].listeners *  nest.response.artists[n].hotttnesss,
                                 imageLink: lastfm.artists.artist[l].image[2]["#text"],
                                 nestId: nest.response.artists[n].id,
