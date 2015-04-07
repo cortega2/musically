@@ -1,8 +1,15 @@
-function nodeGraph(element, controller, setArtist) {
+function nodeGraph() {
+    var element;
+    var controller;
+    var setArtist;
+    var context = this;
+
+    var minWidth = 50;
+    var maxWidth = 100;
+    var svg;
+
     function getArtists() {
-        artists = [];
-        var minWidth = 50;
-        var maxWidth = 100;
+        var artists = [];
         //changed gettopartists to get hypedartists since it was down, change back later when working again
         d3.json("http://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key=563056c3a22cddf982583f3730187b42&limit=200&format=json"
             , function(lastfm){
@@ -28,6 +35,7 @@ function nodeGraph(element, controller, setArtist) {
                                 // rank: nest.response.artists[n].hotttnesss,
                                 rank: lastfm.artists.artist[l].listeners *  nest.response.artists[n].hotttnesss,
                                 imageLink: lastfm.artists.artist[l].image[2]["#text"],
+                                imageLinkLarge : lastfm.artists.artist[l].image[4]["#text"],
                                 nestId: nest.response.artists[n].id,
                                 spotifyId: "",
                                 topGenre: ""
@@ -47,20 +55,18 @@ function nodeGraph(element, controller, setArtist) {
                     }
                 };
 
-                console.log(artists.length);
-
                 var scale = d3.scale.sqrt()
                     .domain([min, max])
                     .range([minWidth, maxWidth]);
 
                 
-                getArtistGenres(artists, scale, maxWidth);
+                context.getArtistGenres(artists, scale, maxWidth);
             });
         });
 
     };
 
-    function getArtistGenres (artists, scale, maxWidth) {
+    this.getArtistGenres = function (artists, scale, maxWidth) {
         genres = {};
         var counter = 0;
 
@@ -87,7 +93,7 @@ function nodeGraph(element, controller, setArtist) {
                     counter ++;
                     if (counter >= artists.length) {
                         var indexedGenres = consolidateGenres();
-                        createGraph(artists, scale, maxWidth, indexedGenres);
+                        context.createGraph(artists, scale, maxWidth, indexedGenres);
                     };
                 });
             })(i);   
@@ -153,7 +159,7 @@ function nodeGraph(element, controller, setArtist) {
                     genreCount++;
                     artistCount += genres[genre].artists.length;
                     for(var i = 0; i < genres[genre].artists.length; i++){
-                        var artistIndex = getIndexByKey(artists, "name", genres[genre].artists[i]);
+                        var artistIndex = context.getIndexByKey(artists, "name", genres[genre].artists[i]);
                         artists[artistIndex].topGenre = genre;
                     }
                 };
@@ -166,7 +172,7 @@ function nodeGraph(element, controller, setArtist) {
         };
     };
 
-    function getIndexByKey(array, key, value){
+    this.getIndexByKey = function (array, key, value){
         for(var i = 0; i < array.length; i++){
             if (array[i][key] == value ) {
                 return i;
@@ -177,8 +183,19 @@ function nodeGraph(element, controller, setArtist) {
         return -1;
     }
 
-    function createGraph (artists, scale, maxSize, indexedGenres){
-        // var body = document.body;
+    this.createGraph = function(artists, scale, maxSize, indexedGenres){
+        // clear everything first
+        d3.selectAll("svg").remove();
+        var tooltips = document.getElementsByClassName("tooltip");
+        if (tooltips.length != 0) {
+            tooltips[0].remove();
+        }; 
+
+        svg = d3.select(element)
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%");
+
 
         var width = element.offsetWidth;
         var height = element.offsetHeight;
@@ -204,7 +221,7 @@ function nodeGraph(element, controller, setArtist) {
         }
 
 
-        nodes = artists;
+        var nodes = artists;
 
         var force = d3.layout.force()
             .nodes(nodes)
@@ -213,11 +230,6 @@ function nodeGraph(element, controller, setArtist) {
             .charge(0)
             .on("tick", tick)
             .start();
-
-        var svg = d3.select(element)
-            .append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%");
 
         //tooltip
         var div = d3.select(element).append("div")
@@ -232,7 +244,7 @@ function nodeGraph(element, controller, setArtist) {
                 .call(force.drag)
                 .on("mousedown", function (d) {
                     d3.event.stopPropagation();
-                    showArtistPage(d);
+                    context.showArtistPage(d);
 
                 })
                 .on("mouseover", function (d) {
@@ -283,12 +295,6 @@ function nodeGraph(element, controller, setArtist) {
 
             node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
         };
-
-        function showArtistPage(artistNode){
-            // window.location.href = '../app/artist.html';
-            setArtist(artistNode);
-            controller.hideNodes();
-        }
 
         function clustering(alpha, d){
             var cluster = clusters[d.cluster];
@@ -353,5 +359,97 @@ function nodeGraph(element, controller, setArtist) {
         // };
     };
 
-    getArtists();
+    this.showArtistPage = function (artistNode){
+            setArtist(artistNode);
+            controller.hideNodes();
+    }
+
+    this.init = function(elem, contr, callback){
+        element = elem;
+        controller = contr;
+        setArtist = callback;
+
+        // svg = d3.select(element)
+        //     .append("svg")
+        //     .attr("width", "100%")
+        //     .attr("height", "100%");
+
+        getArtists();
+    }
+
+    this.getImageFromLastFM = function (artists){
+        var counter = 0;
+        var min = Number.MAX_VALUE;
+        var max = artists[0].rank;
+        
+        for(var i in artists){
+
+            (function (index) {
+                console.log(artists[index].mbid);
+                d3.json('http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&mbid=' + artists[index].mbid + '&api_key=563056c3a22cddf982583f3730187b42&format=json'
+                    , function (data){
+                    
+                    artists[index].imageLink = data.artist.image[2]["#text"];
+                    artists[index].imageLinkLarge = data.artist.image[4]["#text"];
+
+                    var rank = artists[index].rank * data.artist.stats.listeners;
+                    artists[index].rank = rank;
+
+                    if (rank < min) {
+                        min = rank;
+                    };
+                    if(rank > max){
+                        max = rank;
+                    }
+
+                    counter ++;
+                    if (counter >= artists.length) {
+                        console.log(artists);
+                        var scale = d3.scale.sqrt()
+                            .domain([min, max])
+                            .range([minWidth, maxWidth]);
+                        context.getArtistGenres(artists, scale, maxWidth);
+                    };
+                });
+            })(i);   
+        };
+    }
+
+    this.searchArtist = function(query){
+        d3.json('http://developer.echonest.com/api/v4/artist/search?api_key=EZYC2KYTIGEQDMKFM&format=json&name=' + query + '&bucket=hotttnesss&bucket=id:musicbrainz&bucket=id:spotify&results=40',
+            function (data){
+                var artists = [];
+                console.log(data);
+                for(var i = 0; i < data.response.artists.length; i++){
+
+                    //cant use artists with no ids
+                    if (data.response.artists[i].foreign_ids == undefined || data.response.artists[i].foreign_ids.length < 2) {
+                        break;
+                    };
+
+                    var spotifyId = data.response.artists[i].foreign_ids[1].foreign_id.split(":");
+                    var mbid = data.response.artists[i].foreign_ids[0].foreign_id.split(":");
+
+                    var artist = {
+                        name: data.response.artists[i].name,
+                        rank: data.response.artists[i].hotttnesss,
+                        imageLink: "",
+                        imageLinkLarge: "",
+                        nestId: data.response.artists[i].id,
+                        spotifyId: spotifyId[2],
+                        mbid: mbid[2], 
+                        topGenre: "Place holder"
+                    };
+
+                    artists.push(artist);
+                }
+
+                if (artists.length <= 0) {
+                    console.log("No artists were found");
+                    return;
+                };
+                
+                context.getImageFromLastFM(artists);
+            });
+    }
 };

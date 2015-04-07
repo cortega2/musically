@@ -7,7 +7,15 @@
 
 	<body ng-app='musically'>
         <div ng-controller="ViewController">
-            <node-graph ng-show="showGraph"></node-graph>
+            <div ng-show="showGraph">
+                <div class="input-group searchBox">
+                  <input type="text" id="inputBox" class="form-control" aria-label="...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" ng-click="searchArtist()" type="button">Search</button>
+                    </span> 
+                </div>
+                <node-graph></node-graph>
+            </div>
 
             <div ng-controller="ArtistController">
                 <artist-info ng-show="!showGraph"></artist-info>

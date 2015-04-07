@@ -1,12 +1,19 @@
 (function () {
     var pickedArtist;
+    var homeGraph = new nodeGraph();
     var app = angular.module('musically', []);
 
     app.controller('ViewController', function($scope) {
          $scope.showGraph = true;
+         
          $scope.hideNodes = function() {
             this.showGraph = false;
             $scope.$apply();
+         };
+
+         $scope.searchArtist = function(){
+            var input = document.getElementById("inputBox").value;
+            homeGraph.searchArtist(input);
          };
 
     });
@@ -18,8 +25,7 @@
         }
 
         function link(scope, element){
-            
-            nodeGraph(element[0], scope, setPickedArtist); 
+            homeGraph.init(element[0], scope, setPickedArtist); 
         };
     });
 
