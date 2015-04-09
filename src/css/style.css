@@ -61,3 +61,53 @@ div.tooltip {
   	background-repeat: no-repeat;
   	float: right;
 }
+
+.artistBasicInfo{ 
+	background-size: cover;
+	background-repeat: no-repeat;
+	padding: 10px;	
+}
+
+.artistBasicInfo h1{ 
+	margin-bottom: 0px;
+}
+
+.artistBasicInfo h2{ 
+	margin-top: 5px;
+}
+
+p span{ 
+	background-color: rgba(0, 0, 0, .75);
+  	color: white;
+  	display: inline;
+  	margin: 0px;
+  	padding: 2px;
+}
+
+h1 span{ 
+	background-color: rgba(0, 0, 0, .75);
+  	color: white;
+  	display: inline;
+  	margin: 0px;
+}
+
+h2 span{ 
+	background-color: rgba(0, 0, 0, .75);
+  	color: white;
+  	display: inline;
+  	margin: 0px;
+  	font-style: italic;
+}
+
+/*Twitter stuff*/
+.tweets{ 
+	border-top: 2px solid black;	
+}
+/*.timeline-header {
+	display: none;
+}
+
+.timeline {
+	border-radius: 0px;
+
+}*/

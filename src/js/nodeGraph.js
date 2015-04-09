@@ -405,6 +405,11 @@ function nodeGraph() {
                     counter ++;
                     if (counter >= artists.length) {
                         console.log(artists);
+
+                        if (max == min) { 
+                            min = 0;
+                        };
+
                         var scale = d3.scale.sqrt()
                             .domain([min, max])
                             .range([minWidth, maxWidth]);
@@ -445,7 +450,7 @@ function nodeGraph() {
                 }
 
                 if (artists.length <= 0) {
-                    console.log("No artists were found");
+                    alert("No artists were found");
                     return;
                 };
                 

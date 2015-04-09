@@ -36,6 +36,7 @@
         $scope.calledBio = false;
         $scope.topTracks;
         $scope.gotTopTracks = false;
+        $scope.twitterHandle = false;
 
 
         $scope.update = function(){
@@ -54,6 +55,7 @@
                 $scope.artistInfo = new ArtistInfo(this.artist);
                 $scope.artistInfo.getBio($scope.setBio);
                 $scope.artistInfo.getTopTracks($scope.setTopTracks);
+                $scope.artistInfo.getTwitterHandle($scope.setTwitterHandle);
             }
         }
 
@@ -73,17 +75,21 @@
             $scope.artistInfo.search(query);
             // console.log(query);
         }
+
+        $scope.setTwitterHandle = function(handle){ 
+            $scope.twitterHandle = handle;
+            $scope.$apply();
+
+            if (handle) {
+                runTwitter(document,"script","twitter-wjs");
+            }
+        }
     });
 
     app.directive('artistInfo', function(){
         return {
             restrict : 'E',
             templateUrl : 'artist.html'
-            // controller: function () {
-            //     this.artist = pickedArtist;
-            //     console.log(this.artist);
-            // },
-            // controllerAs : 'artist'
         } 
     });
 
@@ -133,5 +139,14 @@
     function setPickedArtist(artist){
         pickedArtist = artist;
     };
+
+    function runTwitter(d, s, id){ 
+        var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+        if(!d.getElementById(id)){
+            js=d.createElement(s);
+            js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js,fjs);
+        };
+    }
 
 })();

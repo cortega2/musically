@@ -9,7 +9,6 @@ function ArtistInfo (artist){
 
 	this.getTopTracks = function (callback) {
 		d3.json('https://api.spotify.com/v1/artists/' + this.artist.spotifyId +'/top-tracks?country=US', function (data){
-			console.log(data);
 			var tracks = [];
 			for(var i = 0; i < data.tracks.length; i++){
 				var track = {
@@ -39,13 +38,25 @@ function ArtistInfo (artist){
 		});
 	}
 
+	this.getTwitterHandle = function(callback){
+		d3.json('http://developer.echonest.com/api/v4/artist/twitter?api_key=FILDTEOIK2HBORODV&id=' + this.artist.nestId + '&format=json', 
+		function (data) { 
+			console.log(data);
+			var handle = false;
+			if (data.response.artist.twitter != undefined) { 
+				handle = data.response.artist.twitter;
+			};
+
+			callback(handle);
+		});
+	}
+
 	function loadYoutube(){
 		gapi.client.load('youtube', 'v3', onYouTubeApiLoad);
 	};
 
 	function onYouTubeApiLoad() {
 	    gapi.client.setApiKey('AIzaSyBe8-Hdhs5xHYNsUi-E3WJiJtrjpD_hsKI');
-	    console.log(this);
 	    context.search(artist.name);
 	}
 
@@ -65,9 +76,7 @@ function ArtistInfo (artist){
 
 	// Called automatically with the response of the YouTube API request.
 	function onSearchResponse(response) {
-	    console.log(response);
 	    var videoId = response.items[0].id.videoId;
-	    console.log(videoId);
 	    player.loadVideoById(videoId);
 	}
 
