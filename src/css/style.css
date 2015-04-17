@@ -100,14 +100,15 @@ h2 span{
 }
 
 /*Twitter stuff*/
-.tweets{ 
-	border-top: 2px solid black;	
-}
-/*.timeline-header {
-	display: none;
+#tweets{ 
+	border-top: 2px solid black;
+	height: 400px;	
 }
 
-.timeline {
-	border-radius: 0px;
+/*Mao stuff*/
+#map { 
+	/*height: 200px;
+	width: 200px; */
+	/*border-top: 2px solid black;*/
 
-}*/
+}

@@ -16,39 +16,30 @@
 		</div>
 		<div class="col-md-8 col-lg-8">
 			<div ng-show="gotTopTracks">
-			<h1>Top tracks</h1>
-			<div ng-repeat="track in topTracks" class="tracks">
-					<sound-button data-ng-click="play($event)" origem="{{track.previewURL}}" image="{{track.image}}">
-					</sound-button>
-					<button class="youtubeSearch" ng-click="searchYoutube(artist.name + ' ' + track.name)"></button>
-					<p>{{track.name | uppercase}}</p>
-					<p>From: {{track.album}}</p>
-			</div>
+				<h1>Top tracks</h1>
+				<div ng-repeat="track in topTracks" class="tracks">
+						<sound-button data-ng-click="play($event)" origem="{{track.previewURL}}" image="{{track.image}}">
+						</sound-button>
+						<button class="youtubeSearch" ng-click="searchYoutube(artist.name + ' ' + track.name)"></button>
+						<p>{{track.name | uppercase}}</p>
+						<p>From: {{track.album}}</p>
+				</div>
 			</div>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-8 col-lg-8">
-		<h1>Upcoming tours</h1>
+		<h1>Upcoming Shows</h1>
+		 <div id="map"></div>
 		</div>
-		<div class="col-md-4- col-md-4">
+		<div class="col-md-4- col-lg-4">
 			<h1>Tweets</h1>
 
 			<div ng-show="!twitterHandle">
 				<p>Couldn't find artist's public account :(</p>
 			</div>
 
-			<div class="tweets" ng-show="twitterHandle">
-				<a 
-					class="twitter-timeline" 
-					href="{{"https://twitter.com/" + twitterHandle}}" 
-					data-chrome="noheader noborders"	
-					data-screen-name="{{twitterHandle}}" 
-					data-widget-id="586052502761693184">
-					Tweets by @ {{twitterHandle}}
-				</a>
-			</div>
-			<!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script> -->
+			<div id="tweets" ng-show="twitterHandle"></div>
 		</div>
 	</div>
 </div>

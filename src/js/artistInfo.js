@@ -41,9 +41,8 @@ function ArtistInfo (artist){
 	this.getTwitterHandle = function(callback){
 		d3.json('http://developer.echonest.com/api/v4/artist/twitter?api_key=FILDTEOIK2HBORODV&id=' + this.artist.nestId + '&format=json', 
 		function (data) { 
-			console.log(data);
 			var handle = false;
-			if (data.response.artist.twitter != undefined) { 
+			if (data != undefined && data.response.artist.twitter != undefined) { 
 				handle = data.response.artist.twitter;
 			};
 
@@ -51,6 +50,33 @@ function ArtistInfo (artist){
 		});
 	}
 
+	this.createMap = function(){
+        var container = document.getElementById("map");
+        container.style.height = bestHeight + "px"; 
+
+		var layer = new L.StamenTileLayer("toner");
+		var map = new L.Map("map", {
+		    center: new L.LatLng(41.83, -87.68),
+		    zoom: 12
+		});
+		map.addLayer(layer);
+
+		d3.json('http://ws.audioscrobbler.com/2.0/?method=artist.getevents&mbid=' + context.artist.mbid + '&api_key=563056c3a22cddf982583f3730187b42&format=json',
+		function (data){
+			console.log(data);
+
+			for(var e = 0; e < data.events.event.length; e++){
+				var show = data.events.event[e];
+				var latlng = show.venue.location["geo:point"];
+
+				var marker = L.marker([Number(latlng["geo:lat"]), Number(latlng["geo:long"])]);
+				marker.addTo(map);
+			}
+		});
+
+	}
+
+	// Youtube functions
 	function loadYoutube(){
 		gapi.client.load('youtube', 'v3', onYouTubeApiLoad);
 	};

@@ -1,3 +1,13 @@
+var bestHeight = 0;
+var body = document.body;
+var w = body.offsetWidth;
+var h = body.offsetHeight;
+
+if (w > h)
+    bestHeight = h; 
+else
+    bestHeight = w;
+
 (function () {
     var pickedArtist;
     var homeGraph = new nodeGraph();
@@ -56,6 +66,7 @@
                 $scope.artistInfo.getBio($scope.setBio);
                 $scope.artistInfo.getTopTracks($scope.setTopTracks);
                 $scope.artistInfo.getTwitterHandle($scope.setTwitterHandle);
+                $scope.artistInfo.createMap();
             }
         }
 
@@ -79,9 +90,8 @@
         $scope.setTwitterHandle = function(handle){ 
             $scope.twitterHandle = handle;
             $scope.$apply();
-
             if (handle) {
-                runTwitter(document,"script","twitter-wjs");
+                runTwitter(document,"script","twitter-wjs", handle);
             }
         }
     });
@@ -140,7 +150,11 @@
         pickedArtist = artist;
     };
 
-    function runTwitter(d, s, id){ 
+    function runTwitter(d, s, id, handle){
+
+        var dom = document.getElementById("tweets");
+        dom.innerHTML = '<a class="twitter-timeline" height="' + bestHeight + '"href="https://twitter.com/' + handle +'"data-chrome="noheader noborders" data-screen-name="' + handle + '"data-widget-id="586052502761693184"> Tweets by @ ' + handle +'</a>';
+
         var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
         if(!d.getElementById(id)){
             js=d.createElement(s);

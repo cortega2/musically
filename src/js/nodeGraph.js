@@ -13,7 +13,7 @@ function nodeGraph() {
         //changed gettopartists to get hypedartists since it was down, change back later when working again
         d3.json("http://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key=563056c3a22cddf982583f3730187b42&limit=200&format=json"
             , function(lastfm){
-            d3.json("http://developer.echonest.com/api/v4/artist/top_hottt?api_key=EZYC2KYTIGEQDMKFM&format=json&results=200&start=0&bucket=hotttnesss", function(nest){
+            d3.json("http://developer.echonest.com/api/v4/artist/top_hottt?api_key=EZYC2KYTIGEQDMKFM&format=json&results=200&start=0&bucket=hotttnesss&bucket=id:musicbrainz", function(nest){
                 console.log(lastfm);
                 console.log(nest);
 
@@ -27,8 +27,10 @@ function nodeGraph() {
                 for(var l in lastfm.artists.artist){
                     // console.log(lastfm.artists.artist[i].name);
                     for(var n in nest.response.artists){
-                        if (lastfm.artists.artist[l].name === nest.response.artists[n].name){
+                        if (lastfm.artists.artist[l].name === nest.response.artists[n].name 
+                            && nest.response.artists[n].foreign_ids != undefined){
                             count ++;
+                            var mbid = nest.response.artists[n].foreign_ids[0].foreign_id.split(":");
 
                             var artist = {
                                 name: nest.response.artists[n].name,
@@ -37,6 +39,7 @@ function nodeGraph() {
                                 imageLink: lastfm.artists.artist[l].image[2]["#text"],
                                 imageLinkLarge : lastfm.artists.artist[l].image[4]["#text"],
                                 nestId: nest.response.artists[n].id,
+                                mbid: mbid[2],
                                 spotifyId: "",
                                 topGenre: ""
 
