@@ -115,16 +115,16 @@ else
                 source.attr("src", audioSrc).attr("type", "audio/mp3");
 
                 audio.attr('preload', true);
-                // audio.src = audioSrc;
                 audio.append(source);
                 element.append(audio);
 
                 scope.play = function (event) {
-                    
                     var audioElement = event.srcElement.children.item();
+                    
                     if (audioElement.paused) {
                         audioElement.play();
-                    } else {
+                    } 
+                    else {
                         audioElement.pause();
                     }
                 };
@@ -150,17 +150,21 @@ else
         pickedArtist = artist;
     };
 
-    function runTwitter(d, s, id, handle){
+function runTwitter(d, s, id, handle){
 
-        var dom = document.getElementById("tweets");
-        dom.innerHTML = '<a class="twitter-timeline" height="' + bestHeight + '"href="https://twitter.com/' + handle +'"data-chrome="noheader noborders" data-screen-name="' + handle + '"data-widget-id="586052502761693184"> Tweets by @ ' + handle +'</a>';
+    var dom = document.getElementById("tweets");
+    dom.innerHTML = '<a class="twitter-timeline" height="' + 
+                    bestHeight + '"href="https://twitter.com/' + 
+                    handle +'"data-chrome="noheader noborders" data-screen-name="' + 
+                    handle + '"data-widget-id="586052502761693184"> Tweets by @ ' + 
+                    handle +'</a>';
 
-        var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-        if(!d.getElementById(id)){
-            js=d.createElement(s);
-            js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
-            fjs.parentNode.insertBefore(js,fjs);
-        };
-    }
+    var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+    if(!d.getElementById(id)){
+        js=d.createElement(s);
+        js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js,fjs);
+    };
+}
 
 })();

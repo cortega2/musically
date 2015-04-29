@@ -18,11 +18,11 @@
 			<div ng-show="gotTopTracks">
 				<h1>Top tracks</h1>
 				<div ng-repeat="track in topTracks" class="tracks">
-						<sound-button data-ng-click="play($event)" origem="{{track.previewURL}}" image="{{track.image}}">
-						</sound-button>
-						<button class="youtubeSearch" ng-click="searchYoutube(artist.name + ' ' + track.name)"></button>
-						<p>{{track.name | uppercase}}</p>
-						<p>From: {{track.album}}</p>
+					<sound-button data-ng-click="play($event)" origem="{{track.previewURL}}" image="{{track.image}}">
+					</sound-button>
+					<button class="youtubeSearch" ng-click="searchYoutube(artist.name + ' ' + track.name)"></button>
+					<p>{{track.name | uppercase}}</p>
+					<p>From: {{track.album}}</p>
 				</div>
 			</div>
 		</div>
