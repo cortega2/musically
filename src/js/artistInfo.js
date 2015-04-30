@@ -51,81 +51,66 @@ function ArtistInfo (artist){
 	}
 
 	this.createMap = function(){
-        var container = document.getElementById("map");
-        container.style.height = bestHeight + "px"; 
-
 		var layer = new L.StamenTileLayer("toner");
 		var map = new L.Map("map", {
 		    center: new L.LatLng(41.83, -87.68),
 		    zoom: 12
 		});
 
-		// map.addLayer(layer);
+		map.addLayer(layer);
 
-		var polyline = L.polyline([
-            [-41.286, 174.796],
-            [41.83, -87.68]]
-            );
+		d3.json('http://ws.audioscrobbler.com/2.0/?method=artist.getevents&mbid=' + context.artist.mbid + '&api_key=563056c3a22cddf982583f3730187b42&format=json',
+		function (data){
+			console.log(data);
+			if (data.events.total == "0") {
+				return;
+			};
 
-		polyline.addTo(map);
+			shows = [];
 
-		var circle = L.circle([51.508, -0.11], 1500, {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5
-});
-		circle.addTo(map);
+			for(var e = 0; e < data.events.event.length; e++){
+				var show = data.events.event[e];
+				var latlng = show.venue.location["geo:point"];
 
-		// d3.json('http://ws.audioscrobbler.com/2.0/?method=artist.getevents&mbid=' + context.artist.mbid + '&api_key=563056c3a22cddf982583f3730187b42&format=json',
-		// function (data){
-		// 	console.log(data);
-		// 	if (data.events.total == "0") {
-		// 		return;
-		// 	};
+				var eventDate = data.events.event[e].startDate.split(" ");
+				var info = {
+					latlng : latlng,
+					date : eventDate[2] + " " + eventDate[1] + ", "	+ eventDate[3],
+					venue : data.events.event[e].venue.name,
+					eventLink : data.events.event[e].website 	
+				};
 
-		// 	var shows = [];
+				shows.push(info);
 
-		// 	for(var e = 0; e < data.events.event.length; e++){
-		// 		var show = data.events.event[e];
-		// 		var latlng = show.venue.location["geo:point"];
+				var marker = L.marker([Number(latlng["geo:lat"]), Number(latlng["geo:long"])]);
+				var content = '<h3>' + info.date + '</h3><h4>@ ' + 
+								 info.venue + '</h4>' +
+								 '<a href="'+ info.eventLink +'">Website</a>';
 
-		// 		var eventDate = data.events.event[e].startDate.split(" ");
-		// 		var info = {
-		// 			latlng : latlng,
-		// 			date : eventDate[2] + " " + eventDate[1] + ", "	+ eventDate[3],
-		// 			venue : data.events.event[e].venue.name,
-		// 			eventLink : data.events.event[e].website 	
-		// 		};
+				marker.bindPopup(content, {autoPan : false}).openPopup();
+				marker.addTo(map);
+			}
 
-		// 		shows.push(info);
+			//sort shows by date
+			shows.sort(function (a, b){
+				d1 = new Date(a.date);
+				d2 = new Date(b.date);
+				return a>b ? -1 : a<b ? 1 : 0;
+			});
 
-		// 		var marker = L.marker([Number(latlng["geo:lat"]), Number(latlng["geo:long"])]);
-		// 		var content = '<p>' + info.date + '<br />@ ' + 
-		// 						 info.venue + '</p>' +
-		// 						 '<a href="'+ info.eventLink +'">Website</a>';
+			for(var i = 0; i<=shows.length-2; i++){
+				var lat1 = Number(shows[i].latlng["geo:lat"]);
+				var lat2 = Number(shows[i+1].latlng["geo:lat"]);
 
-		// 		marker.bindPopup(content, {autoPan : false}).openPopup();
-		// 		marker.addTo(map);
-		// 	}
+				var lng1 = Number(shows[i].latlng["geo:long"]);
+				var lng2 = Number(shows[i+1].latlng["geo:long"]);
 
-		// 	//sort shows by date
-		// 	shows.sort(function (a, b){
-		// 		d1 = new Date(a.date);
-		// 		d2 = new Date(b.date);
-		// 		return a>b ? -1 : a<b ? 1 : 0;
-		// 	});
+				var polyline = L.polyline([[lat1, lng1], [lat2, lng2]], {color: 'red', clickable : false}).addTo(map);	
+				console.log(polyline);
+			}
 
-		// 	// for(var i = 0; i<shows.length-2; i++){
-		// 	// 	var lat1 = Number(shows[i].latlng["geo:lat"]);
-		// 	// 	var lat2 = Number(shows[i+1].latlng["geo:lat"]);
-
-		// 	// 	var lng1 = Number(shows[i].latlng["geo:long"]);
-		// 	// 	var lng2 = Number(shows[i+1].latlng["geo:long"]);
-
-		// 	// 	var polyline = L.polyline([[lat1, lng1], [lat2, lng2]], {color: 'red'}).addTo(map);	
-		// 	// 	console.log(polyline);
-		// 	// }
-		// });
+			map.invalidateSize(false);
+		});
 
 	}
 

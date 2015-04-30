@@ -62,6 +62,9 @@ else
                 var body = document.body;
                 player.setSize(body.offsetWidth, body.offsetHeight);
 
+                var container = document.getElementById("map");
+                container.style.height = bestHeight + "px";
+
                 $scope.artistInfo = new ArtistInfo(this.artist);
                 $scope.artistInfo.getBio($scope.setBio);
                 $scope.artistInfo.getTopTracks($scope.setTopTracks);

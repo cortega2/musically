@@ -107,7 +107,7 @@ h2 span{
 
 /*Mao stuff*/
 #map { 
-	/*height: 200px;
-	width: 200px; */
+	height: 200px;
+	/*width: 200px; */
 	border-top: 2px solid black;
 }
